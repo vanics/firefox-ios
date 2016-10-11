@@ -22,7 +22,7 @@ struct TodayUX {
     static let imageButtonTextSize: CGFloat = 14.0
     static let coplyLinkImageWidth: CGFloat = 23
     static let margin: CGFloat = 8
-    static let buttonSpacerMultipleOfScreen: CGFloat = 0.1
+    static let buttonsHorizontalMarginPercentage: CGFloat = 0.15
 }
 
 @objc (TodayViewController)
@@ -97,7 +97,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         stackView.alignment = .Fill
         stackView.spacing = 0
         stackView.distribution = UIStackViewDistribution.FillEqually
-        let edge = self.view.frame.size.width * TodayUX.buttonSpacerMultipleOfScreen
+        let edge = self.view.frame.size.width * TodayUX.buttonsHorizontalMarginPercentage
         print(edge)
         stackView.layoutMargins = UIEdgeInsets(top: 0, left: edge, bottom: 0, right: edge)
         stackView.layoutMarginsRelativeArrangement = true
