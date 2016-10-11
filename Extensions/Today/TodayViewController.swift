@@ -80,9 +80,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         return button
     }()
 
-    private lazy var buttonSpacer: UIView = UIView()
-    private var heightConstraint: Constraint?
-
     private var widgetStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .Vertical
