@@ -9,22 +9,19 @@ import SnapKit
 
 private let log = Logger.browserLogger
 
+struct TodayStrings {
+    static let NewPrivateTabButtonLabel = NSLocalizedString("TodayWidget.NewPrivateTabButtonLabel", value: "New Private Tab", tableName: "Today", comment: "New Private Tab button label")
+    static let NewTabButtonLabel = NSLocalizedString("TodayWidget.NewTabButtonLabel", value: "New Tab", tableName: "Today", comment: "New Tab button label")
+    static let GoToCopiedLinkLabel = NSLocalizedString("TodayWidget.GoToCopiedLinkLabel", value: "Go to copied link", tableName: "Today", comment: "Go to link on clipboard")}
+
 struct TodayUX {
     static let privateBrowsingColor = UIColor(colorString: "CE6EFC")
     static let backgroundHightlightColor = UIColor(white: 216.0/255.0, alpha: 44.0/255.0)
-
     static let linkTextSize: CGFloat = 10.0
     static let labelTextSize: CGFloat = 14.0
     static let imageButtonTextSize: CGFloat = 14.0
-
-    static let copyLinkButtonHeight: CGFloat = 64
     static let coplyLinkImageWidth: CGFloat = 23
-
-    static let verticalWidgetMargin: CGFloat = 10
-    static let horizontalWidgetMargin: CGFloat = 8
     static let margin: CGFloat = 8
-    static var defaultWidgetTextMargin: CGFloat = 22
-
     static let buttonSpacerMultipleOfScreen: CGFloat = 0.1
 }
 
@@ -34,7 +31,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var newTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
         imageButton.addTarget(self, action: #selector(onPressNewTab), forControlEvents: .TouchUpInside)
-        imageButton.label.text = NSLocalizedString("TodayWidget.NewTabButtonLabel", value: "New Tab", tableName: "Today", comment: "New Tab button label")
+        imageButton.label.text = TodayStrings.NewTabButtonLabel
 
         let button = imageButton.button
 
@@ -52,7 +49,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var newPrivateTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
         imageButton.addTarget(self, action: #selector(onPressNewPrivateTab), forControlEvents: .TouchUpInside)
-        imageButton.label.text = NSLocalizedString("TodayWidget.NewPrivateTabButtonLabel", value: "New Private Tab", tableName: "Today", comment: "New Private Tab button label")
+        imageButton.label.text = TodayStrings.NewPrivateTabButtonLabel
 
         let button = imageButton.button
         button.setImage(UIImage(named: "new_private_tab_button_normal"), forState: .Normal)
@@ -68,7 +65,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var openCopiedLinkButton: ButtonWithSublabel = {
         let button = ButtonWithSublabel()
         
-        button.setTitle(NSLocalizedString("TodayWidget.GoToCopiedLinkLabel", value: "Go to copied link", tableName: "Today", comment: "Go to link on clipboard"), forState: .Normal)
+        button.setTitle(TodayStrings.GoToCopiedLinkLabel, forState: .Normal)
         button.addTarget(self, action: #selector(onPressOpenClibpoard), forControlEvents: .TouchUpInside)
 
         // We need to set the background image/color for .Normal, so the whole button is tappable.
@@ -282,7 +279,7 @@ class ButtonWithSublabel: UIButton {
         }
 
         titleLabel.snp_remakeConstraints { make in
-            make.left.equalTo(imageView.snp_right).offset(TodayUX.verticalWidgetMargin / 2)
+            make.left.equalTo(imageView.snp_right).offset(TodayUX.margin / 2)
             make.right.equalTo(self.snp_right)
             make.top.equalTo(self.snp_top)
         }
