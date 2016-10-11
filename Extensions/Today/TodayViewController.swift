@@ -34,7 +34,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var newTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
         imageButton.addTarget(self, action: #selector(onPressNewTab), forControlEvents: .TouchUpInside)
-        imageButton.labelText = NSLocalizedString("TodayWidget.NewTabButtonLabel", value: "New Tab", tableName: "Today", comment: "New Tab button label")
+        imageButton.label.text = NSLocalizedString("TodayWidget.NewTabButtonLabel", value: "New Tab", tableName: "Today", comment: "New Tab button label")
 
         let button = imageButton.button
 
@@ -52,7 +52,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var newPrivateTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
         imageButton.addTarget(self, action: #selector(onPressNewPrivateTab), forControlEvents: .TouchUpInside)
-        imageButton.labelText = NSLocalizedString("TodayWidget.NewPrivateTabButtonLabel", value: "New Private Tab", tableName: "Today", comment: "New Private Tab button label")
+        imageButton.label.text = NSLocalizedString("TodayWidget.NewPrivateTabButtonLabel", value: "New Private Tab", tableName: "Today", comment: "New Private Tab button label")
 
         let button = imageButton.button
         button.setImage(UIImage(named: "new_private_tab_button_normal"), forState: .Normal)
@@ -147,6 +147,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         }
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        updateCopiedLink()
+    }
+
 
     func updateCopiedLink() {
         if let url = self.copiedURL {
@@ -204,15 +209,6 @@ class ImageButtonWithLabel: UIView {
 
     lazy var button = UIButton()
     lazy var label = UILabel()
-
-    var labelText: String? {
-        set {
-            label.text = newValue
-        }
-        get {
-            return label.text
-        }
-    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
