@@ -17,10 +17,11 @@ struct TodayUX {
     static let labelTextSize: CGFloat = 14.0
     static let imageButtonTextSize: CGFloat = 14.0
 
-    static let copyLinkButtonHeight: CGFloat = 44
+    static let copyLinkButtonHeight: CGFloat = 64
+    static let coplyLinkImageWidth: CGFloat = 23
 
     static let verticalWidgetMargin: CGFloat = 10
-    static let horizontalWidgetMargin: CGFloat = 10
+    static let horizontalWidgetMargin: CGFloat = 8
     static var defaultWidgetTextMargin: CGFloat = 22
 
     static let buttonSpacerMultipleOfScreen = 0.4
@@ -69,7 +70,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         button.addTarget(self, action: #selector(onPressOpenClibpoard), forControlEvents: .TouchUpInside)
 
         // We need to set the background image/color for .Normal, so the whole button is tappable.
-        button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
+        button.setBackgroundColor(UIColor.orangeColor(), forState: .Normal)
         button.setBackgroundColor(TodayUX.backgroundHightlightColor, forState: .Highlighted)
 
         button.setImage(UIImage(named: "copy_link_icon"), forState: .Normal)
@@ -111,20 +112,32 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
         // New tab button and label.
         view.addSubview(newTabButton)
-        newTabButton.snp_makeConstraints { make in
-            make.top.equalTo(buttonSpacer)
-            make.centerX.equalTo(buttonSpacer.snp_left)
-        }
 
-        // New private tab button and label.
-        view.addSubview(newPrivateTabButton)
-        newPrivateTabButton.snp_makeConstraints { make in
-            make.centerY.equalTo(newTabButton.snp_centerY)
-            make.centerX.equalTo(buttonSpacer.snp_right)
+        let button = UIButton()
+        button.setTitle("wattt", forState: .Normal)
+        button.backgroundColor = UIColor.redColor()
+        view.addSubview(button)
+
+        newTabButton.snp_makeConstraints { make in
+            make.top.equalTo(view.snp_top).offset(TodayUX.verticalWidgetMargin)
+            make.bottom.equalTo(button.snp_top).offset(-TodayUX.verticalWidgetMargin)
+            make.centerX.equalTo(buttonSpacer.snp_left)
         }
 
         newTabButton.label.snp_makeConstraints { make in
             make.leading.greaterThanOrEqualTo(view)
+            make.bottom.equalTo(button.snp_top).offset(-TodayUX.verticalWidgetMargin)
+        }
+
+        // New private tab button and label.
+        view.addSubview(newPrivateTabButton)
+        view.addSubview(openCopiedLinkButton)
+
+
+
+        newPrivateTabButton.snp_makeConstraints { make in
+            make.centerY.equalTo(newTabButton.snp_centerY)
+            make.centerX.equalTo(buttonSpacer.snp_right)
         }
 
         newPrivateTabButton.label.snp_makeConstraints { make in
@@ -132,23 +145,41 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             make.left.greaterThanOrEqualTo(newTabButton.label.snp_right).priorityHigh()
         }
 
+        newTabButton.backgroundColor = UIColor.greenColor()
+
+
+
+        button.snp_makeConstraints { make in
+            make.top.equalTo(newPrivateTabButton.label.snp_bottom).offset(TodayUX.verticalWidgetMargin*2)
+            make.width.equalTo(view.snp_width)
+            make.centerX.equalTo(view.snp_centerX)
+            make.height.equalTo(TodayUX.copyLinkButtonHeight).priorityHigh()
+        }
+
         buttonSpacer.snp_makeConstraints { make in
             make.width.equalTo(view.snp_width).multipliedBy(TodayUX.buttonSpacerMultipleOfScreen)
             make.centerX.equalTo(view.snp_centerX)
-            make.top.equalTo(view.snp_top).offset(TodayUX.verticalWidgetMargin)
-            make.bottom.equalTo(newPrivateTabButton.label.snp_bottom).priorityLow()
+
+            make.top.equalTo(view.snp_top)
+            make.bottom.equalTo(button.snp_bottom).offset(TodayUX.verticalWidgetMargin)
         }
 
-        view.addSubview(openCopiedLinkButton)
 
-        openCopiedLinkButton.snp_makeConstraints { make in
-            make.top.equalTo(buttonSpacer.snp_bottom).offset(TodayUX.verticalWidgetMargin)
-            make.width.equalTo(view.snp_width)
-            make.centerX.equalTo(view.snp_centerX)
-            make.height.equalTo(TodayUX.copyLinkButtonHeight)
+
+
+
+        buttonSpacer.backgroundColor = UIColor.yellowColor()
+        openCopiedLinkButton.backgroundColor = UIColor.redColor()
+
+
+        view.snp_remakeConstraints { make in
+            make.trailing.equalTo(button.snp_trailing)
+            make.leading.equalTo(button.snp_leading)
+
+            make.top.equalTo(buttonSpacer.snp_top)
+            make.bottom.equalTo(buttonSpacer.snp_bottom)
+            make.height.equalTo(buttonSpacer.snp_height)
         }
-
-        view.snp_remakeConstraints { heightConstraint = $0.height.equalTo(buttonSpacer.snp_height).priorityHigh().constraint }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -158,7 +189,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         if hasCopiedURL {
             extraHeight += TodayUX.copyLinkButtonHeight + TodayUX.verticalWidgetMargin
         }
-        heightConstraint?.updateOffset(extraHeight)
+       // heightConstraint?.updateOffset(extraHeight)
     }
 
     override func viewDidLayoutSubviews() {
@@ -169,12 +200,12 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
     func updateCopiedLink() {
         if let url = self.copiedURL {
-            self.openCopiedLinkButton.hidden = false
-            self.openCopiedLinkButton.subtitleLabel.hidden = SystemUtils.isDeviceLocked()
-            self.openCopiedLinkButton.subtitleLabel.text = url.absoluteString
-            self.openCopiedLinkButton.remakeConstraints()
+           // self.openCopiedLinkButton.hidden = false
+           // self.openCopiedLinkButton.subtitleLabel.hidden = SystemUtils.isDeviceLocked()
+           // self.openCopiedLinkButton.subtitleLabel.text = url.absoluteString
+          //  self.openCopiedLinkButton.remakeConstraints()
         } else {
-            self.openCopiedLinkButton.hidden = true
+           // self.openCopiedLinkButton.hidden = true
         }
     }
 
@@ -283,7 +314,6 @@ class ImageButtonWithLabel: UIView {
 
 class ButtonWithSublabel: UIButton {
     lazy var subtitleLabel: UILabel = UILabel()
-
     lazy var label: UILabel = UILabel()
 
     required init?(coder aDecoder: NSCoder) {
@@ -300,7 +330,7 @@ class ButtonWithSublabel: UIButton {
     }
 
     private func performLayout() {
-        self.snp_removeConstraints()
+      //  self.snp_removeConstraints()
 
         let titleLabel = self.label
         titleLabel.textColor = UIColor.whiteColor()
@@ -308,34 +338,39 @@ class ButtonWithSublabel: UIButton {
         self.titleLabel?.removeFromSuperview()
         addSubview(titleLabel)
 
+
         let imageView = self.imageView!
 
         let subtitleLabel = self.subtitleLabel
         subtitleLabel.textColor = UIColor.lightGrayColor()
         self.addSubview(subtitleLabel)
 
-        imageView.snp_remakeConstraints { make in
-            make.centerY.equalTo(self.snp_centerY)
-            make.right.equalTo(titleLabel.snp_left).offset(-TodayUX.horizontalWidgetMargin)
-        }
-
-        subtitleLabel.lineBreakMode = .ByTruncatingTail
-        subtitleLabel.snp_makeConstraints { make in
-            make.left.equalTo(titleLabel.snp_left)
-            make.top.equalTo(titleLabel.snp_bottom).offset(TodayUX.verticalWidgetMargin / 2)
-            make.right.lessThanOrEqualTo(self.snp_right).offset(-TodayUX.horizontalWidgetMargin)
-        }
+//        imageView.snp_remakeConstraints { make in
+//            make.centerY.equalTo(self.snp_centerY)
+//            make.left.equalTo(self.snp_left).offset(TodayUX.horizontalWidgetMargin)
+//            make.width.equalTo(TodayUX.coplyLinkImageWidth)
+//        }
 
         remakeConstraints()
+
+        subtitleLabel.lineBreakMode = .ByTruncatingTail
+//        subtitleLabel.snp_makeConstraints { make in
+////            make.left.equalTo(titleLabel.snp_left)
+////            make.top.equalTo(titleLabel.snp_bottom).offset(TodayUX.verticalWidgetMargin / 2)
+////            make.bottom.equalTo(self.snp_bottom)
+////            make.right.equalTo(self.snp_right).offset(-TodayUX.horizontalWidgetMargin)
+//        }
     }
 
     func remakeConstraints() {
-        self.label.snp_remakeConstraints { make in
-            // Vertically centre the label if there is no URL to display
-            let labelOffset = !self.subtitleLabel.hidden ? 0 : self.label.frame.height / 2
-            make.top.equalTo(self.snp_top).offset(TodayUX.verticalWidgetMargin / 2 + labelOffset)
-            make.left.equalTo(self.snp_left).offset(TodayUX.defaultWidgetTextMargin).priorityHigh()
-        }
+//        self.label.snp_remakeConstraints { make in
+////            // Vertically centre the label if there is no URL to display
+////            let labelOffset = !self.subtitleLabel.hidden ? 0 : self.label.frame.height / 2
+////            make.top.equalTo(self.snp_top).offset(TodayUX.verticalWidgetMargin / 2 + labelOffset)
+////            make.height.equalTo(15)
+////            make.left.equalTo(self.imageView!.snp_right).offset(TodayUX.horizontalWidgetMargin)
+////            make.right.equalTo(self.snp_right).offset(-TodayUX.horizontalWidgetMargin)
+//        }
     }
 
     override func setTitle(text: String?, forState state: UIControlState) {
